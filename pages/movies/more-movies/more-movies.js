@@ -1,4 +1,6 @@
 // pages/movies/more-movies/more-movies.js
+import { convertToStarsArray, http } from '../../../utils/utils.js';
+
 const app = getApp();
 Page({
 
@@ -19,15 +21,43 @@ Page({
     let dataUrl = '';
     switch (options.category) {
       case '正在热映':
-        dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/in_theaters?start=0&count=3'; // 正在热映
+        dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/in_theaters'; // 正在热映
         break;
       case '即将上映':
-        dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/coming_soon?start=0&count=3'; // 即将上映
+        dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/coming_soon'; // 即将上映
         break;
       case 'Top250':
-        dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/top250?start=0&count=3'; // Top250
+        dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/top250'; // Top250
         break;
     }
+
+    http(dataUrl, this.processDoubanData);
+  },
+
+
+  processDoubanData: function (moviesDouban) {
+    let movies = [];
+    for (let idx in moviesDouban.subjects) {
+      let subject = moviesDouban.subjects[idx];
+      let title = subject.title;
+      // 如果电影的名字超过六个字符，则只显示六个字符，其余的字符以省略号表示
+      if (title.length >= 6) {
+        title = title.substring(0, 6) + "...";
+      }
+      // [1,1,1,1,1] [1,1,1,0,0]
+      var temp = {
+        stars: convertToStarsArray(subject.rating.stars),
+        title: title,
+        average: subject.rating.average,
+        coverageUrl: subject.images.large,
+        movieId: subject.id
+      }
+      movies.push(temp)
+    }
+    // 推送数据
+    this.setData({
+      movies: movies
+    });
   },
 
   /**

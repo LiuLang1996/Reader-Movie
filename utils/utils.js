@@ -17,7 +17,7 @@ function http(url, callBack) {
     url: url,
     method: 'GET',
     header: {
-      "Content-Type": "json"
+      "Content-Type": "application/jaon;charset=utf-8"
     },
     success: function (res) {
       callBack(res.data);
@@ -29,7 +29,7 @@ function http(url, callBack) {
 }
 
 function convertToCastString(casts) {
-  var castsjoin = 'application/jaon;charset=utf-8';
+  var castsjoin = '';
   for (var idx in casts) {
     castsjoin = castsjoin + casts[idx].name + " / ";
   }
