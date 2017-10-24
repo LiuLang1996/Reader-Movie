@@ -8,17 +8,18 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    totalCount: 0,
+    isEmpty: true
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    let dataUrl = '';
     this.setData({
       pageTitle: options.category
     });
-    let dataUrl = '';
     switch (options.category) {
       case '正在热映':
         dataUrl = app.globalData.doubanBaseUrl + '/v2/movie/in_theaters'; // 正在热映
@@ -32,6 +33,9 @@ Page({
     }
 
     http(dataUrl, this.processDoubanData);
+    this.setData({
+      nextUrl: dataUrl
+    });
   },
 
 
@@ -54,10 +58,22 @@ Page({
       }
       movies.push(temp)
     }
+    let totalMovies = {};
+    if (this.data.isEmpty) {
+      totalMovies = movies;
+      this.data.isEmpty = false;
+    } else {
+      totalMovies = this.data.movies.concat(movies);
+    }
     // 推送数据
     this.setData({
-      movies: movies
+      movies: totalMovies
     });
+    this.data.totalCount += 20;
+  },
+  onScrollLower: function (event) {
+    let nextUrl = `${this.data.nextUrl}?start=${this.data.totalCount}&count=20`;
+    http(nextUrl, this.processDoubanData);
   },
 
   /**
