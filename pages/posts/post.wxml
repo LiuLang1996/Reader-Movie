@@ -3,9 +3,9 @@
 <view>
   <!-- 轮播图 -->
   <swiper autoplay='{{autoplay}}' interval='{{interval}}' circular='{{circular}}' indicator-dots='{{indicatorDots}}'>
-    <block wx:for="{{imgUrls}}" wx:key="imgs">
-      <swiper-item>
-        <image src='{{item}}'></image>
+    <block wx:for="{{images}}" wx:key="imgs">
+      <swiper-item catchtap="toDetail" data-post-id="{{item.postId}}">
+        <image src='{{item.imgUrl}}'></image>
       </swiper-item>
     </block>
   </swiper>

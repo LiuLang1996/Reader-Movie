@@ -3,8 +3,11 @@ Page({
    * 重定向路由
    */
   onTap: function () {
-    wx.redirectTo({
-      url: '/pages/posts/post',
+    // wx.redirectTo({
+    //   url: '/pages/posts/post',
+    // })
+    wx.switchTab({
+      url: '/pages/posts/post'
     })
   }
 })

@@ -5,10 +5,19 @@ Page({
    * 页面的初始数据
    */
   data: {
-    imgUrls: [
-      '/images/iqiyi.png',
-      '/images/vr.png',
-      '/images/wx.png'
+    images: [
+      {
+        imgUrl: '/images/iqiyi.png',
+        postId: 5
+      },
+      {
+        imgUrl: '/images/vr.png',
+        postId: 4
+      },
+      {
+        imgUrl: '/images/wx.png',
+        postId: 3
+      }
     ],
     autoplay: true,
     interval: 5000,
@@ -30,7 +39,6 @@ Page({
    */
   toDetail: function (event) {
     let postId = event.currentTarget.dataset.postId;
-    console.log(postId);
     wx.navigateTo({
       url: './post-detail/post-detail?id=' + postId,
     })
