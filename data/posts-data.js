@@ -87,7 +87,7 @@ var local_database = [
     headImgSrc: "/images/post/vr.png",
     author: "深白色",
     date: "Nov 20 2016",
-    avatar: "../../../images/avatar/3.png",
+    avatar: "/images/avatar/3.png",
     postId: 4,
     music: {
       url: "http://ws.stream.qqmusic.qq.com/C100000Zn0vS4fKKo8.m4a?fromtag=38",

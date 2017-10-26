@@ -10,6 +10,9 @@ Page({
     inTheaters: {},
     comingSoon: {},
     top250: {},
+    serachResult: {},
+    containerShow: true,
+    searchPanelShow: false
   },
 
   /**
@@ -26,52 +29,33 @@ Page({
   },
 
   /**
-   * 生命周期函数--监听页面初次渲染完成
+   * 用户点击输入聚焦时
    */
-  onReady: function () {
-
+  onBindFocus: function (event) {
+    this.setData({
+      containerShow: false,
+      searchPanelShow: true
+    })
   },
 
   /**
-   * 生命周期函数--监听页面显示
+   * 输入框失去焦点时
    */
-  onShow: function () {
-
+  onBindBlur: function (event) {
+    let value = event.detail.value;
+    let searchUrl = `${app.globalData.doubanBaseUrl}/v2/movie/search?q=${value}`;
+    this.getMovieListData(searchUrl, 'serachResult', '');
   },
 
   /**
-   * 生命周期函数--监听页面隐藏
+   * 用户点击删除图标时
    */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  onCancelImgTap: function (event) {
+    this.setData({
+      containerShow: true,
+      searchPanelShow: false,
+      serachResult: {}
+    })
   },
 
   /**
