@@ -69,11 +69,17 @@ Page({
     this.setData({
       movies: totalMovies
     });
+    wx.hideLoading();
+    wx.stopPullDownRefresh();
     this.data.totalCount += 20;
   },
+  
   onScrollLower: function (event) {
     let nextUrl = `${this.data.nextUrl}?start=${this.data.totalCount}&count=20`;
     http(nextUrl, this.processDoubanData);
+    wx.showLoading({
+      title: '正在加载...'
+    })
   },
 
   /**
@@ -113,7 +119,13 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    // 重新加载前20条数据的地址
+    let refreshUrl = `${this.data.nextUrl}?start=0&count=20`;
+    // 清空页面的电影数据和状态
+    this.data.movies = {};
+    this.data.isEmpty = false;
+    http(refreshUrl, this.processDoubanData);
+    wx.startPullDownRefresh()
   },
 
   /**
