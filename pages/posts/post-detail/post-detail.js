@@ -40,6 +40,13 @@ Page({
       postsCollected[options.id] = false;
       wx.setStorageSync('postsCollected', postsCollected);
     }
+
+    // 当音乐播放完成后回复图片
+    wx.onBackgroundAudioStop(function (e) {
+      this.setData({
+        isPlayingMusic: false
+      });
+    });
   },
 
   /**
@@ -104,7 +111,7 @@ Page({
         dataUrl: this.data.postData.music.url,
         title: this.data.postData.music.title,
         coverImgUrl: this.data.postData.music.coverImg
-      }); 
+      });
       /**
        * 修改音乐播放状态
        */
