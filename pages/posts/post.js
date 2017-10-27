@@ -1,4 +1,4 @@
-import { postList } from '../../data/posts-data.js';
+import { postList } from "../../data/posts-data.js";
 
 Page({
   /**
@@ -7,15 +7,15 @@ Page({
   data: {
     images: [
       {
-        imgUrl: '/images/iqiyi.png',
+        imgUrl: "/images/iqiyi.png",
         postId: 5
       },
       {
-        imgUrl: '/images/vr.png',
+        imgUrl: "/images/vr.png",
         postId: 4
       },
       {
-        imgUrl: '/images/wx.png',
+        imgUrl: "/images/wx.png",
         postId: 3
       }
     ],
@@ -28,19 +28,18 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad(options) {
     this.setData({
       postLists: postList
-    })
-
+    });
   },
   /**
    * 页面跳转--从文章列表页面跳转到对应的文章详情页面
    */
-  toDetail: function (event) {
+  toDetail(event) {
     let postId = event.currentTarget.dataset.postId;
     wx.navigateTo({
-      url: './post-detail/post-detail?id=' + postId,
-    })
+      url: "./post-detail/post-detail?id=" + postId
+    });
   }
-})
+});

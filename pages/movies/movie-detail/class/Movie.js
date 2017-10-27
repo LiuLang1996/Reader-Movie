@@ -1,4 +1,5 @@
-const util = require('../../../../utils/utils.js');
+const util = require("../../../../utils/utils.js");
+
 class Movie {
   constructor(url) {
     this.url = url;
@@ -13,20 +14,19 @@ class Movie {
     if (!data) {
       return;
     }
-    var director = {
+    let director = {
       avatar: "",
       name: "",
       id: ""
-    }
+    };
     if (data.directors[0] != null) {
       if (data.directors[0].avatars != null) {
-        director.avatar = data.directors[0].avatars.large
-
+        director.avatar = data.directors[0].avatars.large;
       }
       director.name = data.directors[0].name;
       director.id = data.directors[0].id;
     }
-    var movie = {
+    let movie = {
       movieImg: data.images ? data.images.large : "",
       country: data.countries[0],
       title: data.title,
@@ -41,9 +41,9 @@ class Movie {
       casts: util.convertToCastString(data.casts),
       castsInfo: util.convertToCastInfos(data.casts),
       summary: data.summary
-    }
+    };
     this.cb(movie);
   }
 }
 
-export { Movie }
+export { Movie };

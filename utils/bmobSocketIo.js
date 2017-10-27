@@ -6,13 +6,10 @@
  * (c) 2016-2050 Magic
  */
 
-
-(function (root) {
-
-  var io = ('undefined' === typeof module ? {} : module.exports);
+(function(root) {
+  var io = "undefined" === typeof module ? {} : module.exports;
   var BmobSocketIo = {};
   exports.BmobSocketIo = BmobSocketIo;
-
 
   /**
    * socket.io
@@ -20,8 +17,7 @@
    * MIT Licensed
    */
 
-  (function (exports, global, root) {
-
+  (function(exports, global, root) {
     /**
      * IO namespace.
      *
@@ -35,12 +31,9 @@
      * @api public
      */
 
-    io.version = 'V1.0.0';
-
+    io.version = "V1.0.0";
 
     io.JSON = JSON;
-
-
 
     /**
      * Protocol implemented.
@@ -49,8 +42,6 @@
      */
 
     io.protocol = 1;
-
-
 
     /**
      * Available transports, these will be populated with the available transports
@@ -82,10 +73,10 @@
    * @api public
    */
 
-    io.connect = function (host, details) {
-      var uri = io.util.parseUri(host)
-        , uuri
-        , socket;
+    io.connect = function(host, details) {
+      var uri = io.util.parseUri(host),
+        uuri,
+        socket;
 
       if (global && global.location) {
         uri.protocol = uri.protocol || global.location.protocol.slice(0, -1);
@@ -96,36 +87,29 @@
       uuri = io.util.uniqueUri(uri);
 
       var options = {
-        host: uri.host
-        , secure: 'https' == uri.protocol
-        , port: ""
-        , query: uri.query || ''
+        host: uri.host,
+        secure: "https" == uri.protocol,
+        port: "",
+        query: uri.query || ""
       };
-
 
       io.util.merge(options, details);
 
-      if (options['force new connection'] || !io.sockets[uuri]) {
+      if (options["force new connection"] || !io.sockets[uuri]) {
         socket = new io.Socket(options);
       }
 
-      if (!options['force new connection'] && socket) {
+      if (!options["force new connection"] && socket) {
         io.sockets[uuri] = socket;
       }
 
-
-
-      console.log("connect")
+      console.log("connect");
       socket = socket || io.sockets[uuri];
 
       // if path is different from '' or /
-      return socket.of(uri.path.length > 1 ? uri.path : '');
-    }
-
-  })('object' === typeof module ? module.exports : (this.io = {}), this);
-
-
-
+      return socket.of(uri.path.length > 1 ? uri.path : "");
+    };
+  })("object" === typeof module ? module.exports : (this.io = {}), this);
 
   /**
    * socket.io
@@ -133,8 +117,7 @@
    * MIT Licensed
    */
 
-  (function (exports, io) {
-
+  (function(exports, io) {
     /**
      * Expose constructor.
      */
@@ -147,7 +130,7 @@
      * @api public.
      */
 
-    function EventEmitter() { };
+    function EventEmitter() {}
 
     /**
      * Adds a listener
@@ -155,7 +138,7 @@
      * @api public
      */
 
-    EventEmitter.prototype.on = function (name, fn) {
+    EventEmitter.prototype.on = function(name, fn) {
       if (!this.$events) {
         this.$events = {};
       }
@@ -179,13 +162,13 @@
      * @api public
      */
 
-    EventEmitter.prototype.once = function (name, fn) {
+    EventEmitter.prototype.once = function(name, fn) {
       var self = this;
 
       function on() {
         self.removeListener(name, on);
         fn.apply(this, arguments);
-      };
+      }
 
       on.listener = fn;
       this.on(name, on);
@@ -199,7 +182,7 @@
      * @api public
      */
 
-    EventEmitter.prototype.removeListener = function (name, fn) {
+    EventEmitter.prototype.removeListener = function(name, fn) {
       if (this.$events && this.$events[name]) {
         var list = this.$events[name];
 
@@ -207,7 +190,10 @@
           var pos = -1;
 
           for (var i = 0, l = list.length; i < l; i++) {
-            if (list[i] === fn || (list[i].listener && list[i].listener === fn)) {
+            if (
+              list[i] === fn ||
+              (list[i].listener && list[i].listener === fn)
+            ) {
               pos = i;
               break;
             }
@@ -236,7 +222,7 @@
      * @api public
      */
 
-    EventEmitter.prototype.removeAllListeners = function (name) {
+    EventEmitter.prototype.removeAllListeners = function(name) {
       if (name === undefined) {
         this.$events = {};
         return this;
@@ -255,7 +241,7 @@
      * @api publci
      */
 
-    EventEmitter.prototype.listeners = function (name) {
+    EventEmitter.prototype.listeners = function(name) {
       if (!this.$events) {
         this.$events = {};
       }
@@ -277,7 +263,7 @@
      * @api public
      */
 
-    EventEmitter.prototype.emit = function (name) {
+    EventEmitter.prototype.emit = function(name) {
       if (!this.$events) {
         return false;
       }
@@ -290,7 +276,7 @@
 
       var args = Array.prototype.slice.call(arguments, 1);
 
-      if ('function' == typeof handler) {
+      if ("function" == typeof handler) {
         handler.apply(this, args);
       } else if (io.util.isArray(handler)) {
         var listeners = handler.slice();
@@ -304,14 +290,10 @@
 
       return true;
     };
-
   })(
-    'undefined' != typeof io ? io : module.exports
-    , 'undefined' != typeof io ? io : module.parent.exports
-    );
-
-
-
+    "undefined" != typeof io ? io : module.exports,
+    "undefined" != typeof io ? io : module.parent.exports
+  );
 
   /**
    * socket.io
@@ -319,15 +301,14 @@
    * MIT Licensed
    */
 
-  (function (exports, global) {
-
+  (function(exports, global) {
     /**
      * Utilities namespace.
      *
      * @namespace
      */
 
-    var util = exports.util = {};
+    var util = (exports.util = {});
 
     /**
      * Parses an URI
@@ -337,17 +318,30 @@
 
     var re = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
 
-    var parts = ['source', 'protocol', 'authority', 'userInfo', 'user', 'password',
-      'host', 'port', 'relative', 'path', 'directory', 'file', 'query',
-      'anchor'];
+    var parts = [
+      "source",
+      "protocol",
+      "authority",
+      "userInfo",
+      "user",
+      "password",
+      "host",
+      "port",
+      "relative",
+      "path",
+      "directory",
+      "file",
+      "query",
+      "anchor"
+    ];
 
-    util.parseUri = function (str) {
-      var m = re.exec(str || '')
-        , uri = {}
-        , i = 14;
+    util.parseUri = function(str) {
+      var m = re.exec(str || ""),
+        uri = {},
+        i = 14;
 
       while (i--) {
-        uri[parts[i]] = m[i] || '';
+        uri[parts[i]] = m[i] || "";
       }
 
       return uri;
@@ -360,24 +354,27 @@
      * @api public
      */
 
-    util.uniqueUri = function (uri) {
-      var protocol = uri.protocol
-        , host = uri.host
-        , port = uri.port;
+    util.uniqueUri = function(uri) {
+      var protocol = uri.protocol,
+        host = uri.host,
+        port = uri.port;
 
       if (global) {
         host = host || document.domain;
-        port = port || (protocol == 'https'
-          && document.location.protocol !== 'https:' ? 443 : document.location.port);
+        port =
+          port ||
+          (protocol == "https" && document.location.protocol !== "https:"
+            ? 443
+            : document.location.port);
       } else {
-        host = host || 'localhost';
+        host = host || "localhost";
 
-        if (!port && protocol == 'https') {
+        if (!port && protocol == "https") {
           port = 443;
         }
       }
 
-      return (protocol || 'http') + '://' + host + ':' + (port || 80);
+      return (protocol || "http") + "://" + host + ":" + (port || 80);
     };
 
     /**
@@ -388,18 +385,18 @@
      * @api public
      */
 
-    util.query = function (base, addition) {
-      var query = util.chunkQuery(base || '')
-        , components = [];
+    util.query = function(base, addition) {
+      var query = util.chunkQuery(base || ""),
+        components = [];
 
-      util.merge(query, util.chunkQuery(addition || ''));
+      util.merge(query, util.chunkQuery(addition || ""));
       for (var part in query) {
         if (query.hasOwnProperty(part)) {
-          components.push(part + '=' + query[part]);
+          components.push(part + "=" + query[part]);
         }
       }
 
-      return components.length ? '?' + components.join('&') : '';
+      return components.length ? "?" + components.join("&") : "";
     };
 
     /**
@@ -409,15 +406,15 @@
      * @api public
      */
 
-    util.chunkQuery = function (qs) {
-      var query = {}
-        , params = qs.split('&')
-        , i = 0
-        , l = params.length
-        , kv;
+    util.chunkQuery = function(qs) {
+      var query = {},
+        params = qs.split("&"),
+        i = 0,
+        l = params.length,
+        kv;
 
       for (; i < l; ++i) {
-        kv = params[i].split('=');
+        kv = params[i].split("=");
         if (kv[0]) {
           query[kv[0]] = kv[1];
         }
@@ -437,12 +434,12 @@
 
     var pageLoaded = false;
 
-    util.load = function (fn) {
+    util.load = function(fn) {
       if (pageLoaded) {
         return fn();
       }
 
-      util.on(global, 'load', fn, false);
+      util.on(global, "load", fn, false);
     };
 
     /**
@@ -451,23 +448,20 @@
      * @api private
      */
 
-    util.on = function (element, event, fn, capture) {
+    util.on = function(element, event, fn, capture) {
       if (element.attachEvent) {
-        element.attachEvent('on' + event, fn);
+        element.attachEvent("on" + event, fn);
       } else if (element.addEventListener) {
         element.addEventListener(event, fn, capture);
       }
     };
 
-
-
-
     /**
      * Change the internal pageLoaded value.
      */
 
-    if ('undefined' != typeof window) {
-      util.load(function () {
+    if ("undefined" != typeof window) {
+      util.load(function() {
         pageLoaded = true;
       });
     }
@@ -479,12 +473,12 @@
      * @api public
      */
 
-    util.defer = function (fn) {
-      if (!util.ua.webkit || 'undefined' != typeof importScripts) {
+    util.defer = function(fn) {
+      if (!util.ua.webkit || "undefined" != typeof importScripts) {
         return fn();
       }
 
-      util.load(function () {
+      util.load(function() {
         setTimeout(fn, 100);
       });
     };
@@ -496,13 +490,13 @@
      */
 
     util.merge = function merge(target, additional, deep, lastseen) {
-      var seen = lastseen || []
-        , depth = typeof deep == 'undefined' ? 2 : deep
-        , prop;
+      var seen = lastseen || [],
+        depth = typeof deep == "undefined" ? 2 : deep,
+        prop;
 
       for (prop in additional) {
         if (additional.hasOwnProperty(prop) && util.indexOf(seen, prop) < 0) {
-          if (typeof target[prop] !== 'object' || !depth) {
+          if (typeof target[prop] !== "object" || !depth) {
             target[prop] = additional[prop];
             seen.push(additional[prop]);
           } else {
@@ -520,7 +514,7 @@
      * @api public
      */
 
-    util.mixin = function (ctor, ctor2) {
+    util.mixin = function(ctor, ctor2) {
       util.merge(ctor.prototype, ctor2.prototype);
     };
 
@@ -530,10 +524,10 @@
      * @api private
      */
 
-    util.inherit = function (ctor, ctor2) {
-      function f() { };
+    util.inherit = function(ctor, ctor2) {
+      function f() {}
       f.prototype = ctor2.prototype;
-      ctor.prototype = new f;
+      ctor.prototype = new f();
     };
 
     /**
@@ -546,9 +540,11 @@
      * @api public
      */
 
-    util.isArray = Array.isArray || function (obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    };
+    util.isArray =
+      Array.isArray ||
+      function(obj) {
+        return Object.prototype.toString.call(obj) === "[object Array]";
+      };
 
     /**
      * Intersects values of two arrays into a third
@@ -556,18 +552,17 @@
      * @api public
      */
 
-    util.intersect = function (arr, arr2) {
-      var ret = []
-        , longest = arr.length > arr2.length ? arr : arr2
-        , shortest = arr.length > arr2.length ? arr2 : arr;
+    util.intersect = function(arr, arr2) {
+      var ret = [],
+        longest = arr.length > arr2.length ? arr : arr2,
+        shortest = arr.length > arr2.length ? arr2 : arr;
 
       for (var i = 0, l = shortest.length; i < l; i++) {
-        if (~util.indexOf(longest, shortest[i]))
-          ret.push(shortest[i]);
+        if (~util.indexOf(longest, shortest[i])) ret.push(shortest[i]);
       }
 
       return ret;
-    }
+    };
 
     /**
      * Array indexOf compatibility.
@@ -576,10 +571,12 @@
      * @api public
      */
 
-    util.indexOf = function (arr, o, i) {
-
-      for (var j = arr.length, i = i < 0 ? i + j < 0 ? 0 : i + j : i || 0;
-        i < j && arr[i] !== o; i++) { }
+    util.indexOf = function(arr, o, i) {
+      for (
+        var j = arr.length, i = i < 0 ? (i + j < 0 ? 0 : i + j) : i || 0;
+        i < j && arr[i] !== o;
+        i++
+      ) {}
 
       return j <= i ? -1 : i;
     };
@@ -590,11 +587,10 @@
      * @api public
      */
 
-    util.toArray = function (enu) {
+    util.toArray = function(enu) {
       var arr = [];
 
-      for (var i = 0, l = enu.length; i < l; i++)
-        arr.push(enu[i]);
+      for (var i = 0, l = enu.length; i < l; i++) arr.push(enu[i]);
 
       return arr;
     };
@@ -613,15 +609,17 @@
      * @api public
      */
 
-    util.ua.hasCORS = 'undefined' != typeof XMLHttpRequest && (function () {
-      try {
-        var a = new XMLHttpRequest();
-      } catch (e) {
-        return false;
-      }
+    util.ua.hasCORS =
+      "undefined" != typeof XMLHttpRequest &&
+      (function() {
+        try {
+          var a = new XMLHttpRequest();
+        } catch (e) {
+          return false;
+        }
 
-      return a.withCredentials != undefined;
-    })();
+        return a.withCredentials != undefined;
+      })();
 
     /**
      * Detect webkit.
@@ -629,8 +627,8 @@
      * @api public
      */
 
-    util.ua.webkit = 'undefined' != typeof navigator
-      && /webkit/i.test(navigator.userAgent);
+    util.ua.webkit =
+      "undefined" != typeof navigator && /webkit/i.test(navigator.userAgent);
 
     /**
     * Detect iPad/iPhone/iPod.
@@ -638,10 +636,10 @@
     * @api public
     */
 
-    util.ua.iDevice = 'undefined' != typeof navigator
-      && /iPad|iPhone|iPod/i.test(navigator.userAgent);
-
-  })('undefined' != typeof io ? io : module.exports, this);
+    util.ua.iDevice =
+      "undefined" != typeof navigator &&
+      /iPad|iPhone|iPod/i.test(navigator.userAgent);
+  })("undefined" != typeof io ? io : module.exports, this);
 
   /**
  * socket.io
@@ -649,8 +647,7 @@
  * MIT Licensed
  */
 
-  (function (exports, io, global) {
-
+  (function(exports, io, global) {
     /**
      * Expose constructor.
      */
@@ -666,22 +663,22 @@
 
     function Socket(options) {
       this.options = {
-        port: 80
-        , secure: true
-        , document: false
-        , resource: 'socket.io'
-        , transports: io.transports
-        , 'connect timeout': 10000
-        , 'try multiple transports': true
-        , 'reconnect': true
-        , 'reconnection delay': 500
-        , 'reconnection limit': Infinity
-        , 'reopen delay': 3000
-        , 'max reconnection attempts': 10
-        , 'sync disconnect on unload': false
-        , 'auto connect': true
-        , 'flash policy port': 10843
-        , 'manualFlush': false
+        port: 80,
+        secure: true,
+        document: false,
+        resource: "socket.io",
+        transports: io.transports,
+        "connect timeout": 10000,
+        "try multiple transports": true,
+        reconnect: true,
+        "reconnection delay": 500,
+        "reconnection limit": Infinity,
+        "reopen delay": 3000,
+        "max reconnection attempts": 10,
+        "sync disconnect on unload": false,
+        "auto connect": true,
+        "flash policy port": 10843,
+        manualFlush: false
       };
 
       io.util.merge(this.options, options);
@@ -694,18 +691,25 @@
       this.buffer = [];
       this.doBuffer = false;
 
-      if (this.options['sync disconnect on unload'] &&
-        (!this.isXDomain() || io.util.ua.hasCORS)) {
+      if (
+        this.options["sync disconnect on unload"] &&
+        (!this.isXDomain() || io.util.ua.hasCORS)
+      ) {
         var self = this;
-        io.util.on(global, 'beforeunload', function () {
-          self.disconnectSync();
-        }, false);
+        io.util.on(
+          global,
+          "beforeunload",
+          function() {
+            self.disconnectSync();
+          },
+          false
+        );
       }
 
-      if (this.options['auto connect']) {
+      if (this.options["auto connect"]) {
         this.connect();
       }
-    };
+    }
 
     /**
      * Apply EventEmitter mixin.
@@ -719,12 +723,12 @@
      * @api public
      */
 
-    Socket.prototype.of = function (name) {
+    Socket.prototype.of = function(name) {
       if (!this.namespaces[name]) {
         this.namespaces[name] = new io.SocketNamespace(this, name);
 
-        if (name !== '') {
-          this.namespaces[name].packet({ type: 'connect' });
+        if (name !== "") {
+          this.namespaces[name].packet({ type: "connect" });
         }
       }
 
@@ -737,7 +741,7 @@
      * @api private
      */
 
-    Socket.prototype.publish = function () {
+    Socket.prototype.publish = function() {
       this.emit.apply(this, arguments);
 
       var nsp;
@@ -756,30 +760,29 @@
      * @api private
      */
 
-    function empty() { };
+    function empty() {}
 
-    Socket.prototype.handshake = function (fn) {
-      var self = this
-        , options = this.options;
+    Socket.prototype.handshake = function(fn) {
+      var self = this,
+        options = this.options;
 
       function complete(data) {
         if (data instanceof Error) {
           self.connecting = false;
           self.onError(data.message);
         } else {
-          fn.apply(null, data.split(':'));
+          fn.apply(null, data.split(":"));
         }
-      };
+      }
 
       options.secure = true;
       var url = [
-        'http' + (options.secure ? 's' : '') + ':/'
-        , options.host
-        , options.resource
-        , io.protocol
-        , io.util.query(this.options.query, 't=' + +new Date)
-      ].join('/');
-
+        "http" + (options.secure ? "s" : "") + ":/",
+        options.host,
+        options.resource,
+        io.protocol,
+        io.util.query(this.options.query, "t=" + +new Date())
+      ].join("/");
 
       var dataObject = {};
       var data = JSON.stringify(dataObject);
@@ -791,24 +794,21 @@
         url: url,
         data: data,
         header: {
-          'content-type': 'text/plain'
+          "content-type": "text/plain"
         },
-        success: function (res) {
+        success: function(res) {
           if (res.data && res.data.code) {
             console.log("request error");
           } else if (res.statusCode != 200) {
             console.log("request error");
-
           } else {
             complete(res.data);
           }
-
         },
-        fail: function (e) {
+        fail: function(e) {
           console.log("request error");
         }
       });
-
     };
 
     /**
@@ -817,10 +817,11 @@
      * @api private
      */
 
-    Socket.prototype.getTransport = function (override) {
-      var transports = override || this.transports, match;
+    Socket.prototype.getTransport = function(override) {
+      var transports = override || this.transports,
+        match;
 
-      for (var i = 0, transport; transport = transports[i]; i++) {
+      for (var i = 0, transport; (transport = transports[i]); i++) {
         if (transport) {
           return new io.Transport[transport](this, this.sessionid);
         }
@@ -837,7 +838,7 @@
      * @api public
      */
 
-    Socket.prototype.connect = function (fn) {
+    Socket.prototype.connect = function(fn) {
       if (this.connecting) {
         return this;
       }
@@ -845,16 +846,15 @@
       var self = this;
       self.connecting = true;
 
-      this.handshake(function (sid, heartbeat, close, transports) {
+      this.handshake(function(sid, heartbeat, close, transports) {
         self.sessionid = sid;
         self.closeTimeout = close * 1000;
         self.heartbeatTimeout = heartbeat * 1000;
 
         if (!self.transports)
-          self.transports = self.origTransports = (transports ? io.util.intersect(
-            transports.split(',')
-            , self.options.transports
-          ) : self.options.transports);
+          self.transports = self.origTransports = transports
+            ? io.util.intersect(transports.split(","), self.options.transports)
+            : self.options.transports;
 
         self.setHeartbeatTimeout();
 
@@ -863,43 +863,45 @@
 
           self.transport = self.getTransport(transports);
 
-          if (!self.transport) return self.publish('connect_failed');
+          if (!self.transport) return self.publish("connect_failed");
 
           // once the transport is ready
-          self.transport.ready(self, function () {
+          self.transport.ready(self, function() {
             self.connecting = true;
-            self.publish('connecting', self.transport.name);
+            self.publish("connecting", self.transport.name);
             self.transport.open();
 
-            if (self.options['connect timeout']) {
-              self.connectTimeoutTimer = setTimeout(function () {
+            if (self.options["connect timeout"]) {
+              self.connectTimeoutTimer = setTimeout(function() {
                 if (!self.connected) {
                   self.connecting = false;
 
-                  if (self.options['try multiple transports']) {
+                  if (self.options["try multiple transports"]) {
                     var remaining = self.transports;
 
-                    while (remaining.length > 0 && remaining.splice(0, 1)[0] !=
-                      self.transport.name) { }
+                    while (
+                      remaining.length > 0 &&
+                      remaining.splice(0, 1)[0] != self.transport.name
+                    ) {}
 
                     if (remaining.length) {
                       connect(remaining);
                     } else {
-                      self.publish('connect_failed2');
+                      self.publish("connect_failed2");
                     }
                   }
                 }
-              }, self.options['connect timeout']);
+              }, self.options["connect timeout"]);
             }
           });
         }
 
         connect(self.transports);
 
-        self.once('connect', function (){
+        self.once("connect", function() {
           clearTimeout(self.connectTimeoutTimer);
 
-          fn && typeof fn == 'function' && fn();
+          fn && typeof fn == "function" && fn();
         });
       });
 
@@ -913,12 +915,12 @@
      * @api private
      */
 
-    Socket.prototype.setHeartbeatTimeout = function () {
+    Socket.prototype.setHeartbeatTimeout = function() {
       clearTimeout(this.heartbeatTimeoutTimer);
       if (this.transport && !this.transport.heartbeats()) return;
 
       var self = this;
-      this.heartbeatTimeoutTimer = setTimeout(function () {
+      this.heartbeatTimeoutTimer = setTimeout(function() {
         self.transport.onClose();
       }, this.heartbeatTimeout);
     };
@@ -931,7 +933,7 @@
      * @api public
      */
 
-    Socket.prototype.packet = function (data) {
+    Socket.prototype.packet = function(data) {
       if (this.connected && !this.doBuffer) {
         this.transport.packet(data);
       } else {
@@ -947,11 +949,11 @@
      * @api private
      */
 
-    Socket.prototype.setBuffer = function (v) {
+    Socket.prototype.setBuffer = function(v) {
       this.doBuffer = v;
 
       if (!v && this.connected && this.buffer.length) {
-        if (!this.options['manualFlush']) {
+        if (!this.options["manualFlush"]) {
           this.flushBuffer();
         }
       }
@@ -964,11 +966,10 @@
      * @api public
      */
 
-    Socket.prototype.flushBuffer = function () {
+    Socket.prototype.flushBuffer = function() {
       this.transport.payload(this.buffer);
       this.buffer = [];
     };
-
 
     /**
      * Disconnect the established connect.
@@ -977,14 +978,14 @@
      * @api public
      */
 
-    Socket.prototype.disconnect = function () {
+    Socket.prototype.disconnect = function() {
       if (this.connected || this.connecting) {
         if (this.open) {
-          this.of('').packet({ type: 'disconnect' });
+          this.of("").packet({ type: "disconnect" });
         }
 
         // handle disconnection immediately
-        this.onDisconnect('booted');
+        this.onDisconnect("booted");
       }
 
       return this;
@@ -996,23 +997,24 @@
      * @api private
      */
 
-    Socket.prototype.disconnectSync = function () {
+    Socket.prototype.disconnectSync = function() {
       // ensure disconnection
       var xhr = io.util.request();
-      var uri = [
-        'http' + (this.options.secure ? 's' : '') + ':/'
-        , this.options.host + ':' + this.options.port
-        , this.options.resource
-        , io.protocol
-        , ''
-        , this.sessionid
-      ].join('/') + '/?disconnect=1';
+      var uri =
+        [
+          "http" + (this.options.secure ? "s" : "") + ":/",
+          this.options.host + ":" + this.options.port,
+          this.options.resource,
+          io.protocol,
+          "",
+          this.sessionid
+        ].join("/") + "/?disconnect=1";
 
-      xhr.open('GET', uri, false);
+      xhr.open("GET", uri, false);
       xhr.send(null);
 
       // handle disconnection immediately
-      this.onDisconnect('booted');
+      this.onDisconnect("booted");
     };
 
     /**
@@ -1023,8 +1025,7 @@
      * @api private
      */
 
-    Socket.prototype.isXDomain = function () {
-
+    Socket.prototype.isXDomain = function() {
       // var port = global.location.port ||
       //   ('https:' == global.location.protocol ? 443 : 80);
       var port = "";
@@ -1038,7 +1039,7 @@
      * @api private
      */
 
-    Socket.prototype.onConnect = function () {
+    Socket.prototype.onConnect = function() {
       if (!this.connected) {
         this.connected = true;
         this.connecting = false;
@@ -1046,7 +1047,7 @@
           // make sure to flush the buffer
           this.setBuffer(false);
         }
-        this.emit('connect');
+        this.emit("connect");
       }
     };
 
@@ -1056,7 +1057,7 @@
      * @api private
      */
 
-    Socket.prototype.onOpen = function () {
+    Socket.prototype.onOpen = function() {
       this.open = true;
     };
 
@@ -1066,7 +1067,7 @@
      * @api private
      */
 
-    Socket.prototype.onClose = function () {
+    Socket.prototype.onClose = function() {
       this.open = false;
       clearTimeout(this.heartbeatTimeoutTimer);
     };
@@ -1077,7 +1078,7 @@
      * @param text
      */
 
-    Socket.prototype.onPacket = function (packet) {
+    Socket.prototype.onPacket = function(packet) {
       this.of(packet.endpoint).onPacket(packet);
     };
 
@@ -1087,9 +1088,9 @@
      * @api private
      */
 
-    Socket.prototype.onError = function (err) {
+    Socket.prototype.onError = function(err) {
       if (err && err.advice) {
-        if (err.advice === 'reconnect' && (this.connected || this.connecting)) {
+        if (err.advice === "reconnect" && (this.connected || this.connecting)) {
           this.disconnect();
           if (this.options.reconnect) {
             this.reconnect();
@@ -1097,7 +1098,7 @@
         }
       }
 
-      this.publish('error', err && err.reason ? err.reason : err);
+      this.publish("error", err && err.reason ? err.reason : err);
     };
 
     /**
@@ -1106,9 +1107,9 @@
      * @api private
      */
 
-    Socket.prototype.onDisconnect = function (reason) {
-      var wasConnected = this.connected
-        , wasConnecting = this.connecting;
+    Socket.prototype.onDisconnect = function(reason) {
+      var wasConnected = this.connected,
+        wasConnecting = this.connecting;
 
       this.connected = false;
       this.connecting = false;
@@ -1118,9 +1119,13 @@
         this.transport.close();
         this.transport.clearTimeouts();
         if (wasConnected) {
-          this.publish('disconnect', reason);
+          this.publish("disconnect", reason);
 
-          if ('booted' != reason && this.options.reconnect && !this.reconnecting) {
+          if (
+            "booted" != reason &&
+            this.options.reconnect &&
+            !this.reconnecting
+          ) {
             this.reconnect();
           }
         }
@@ -1133,30 +1138,34 @@
      * @api private
      */
 
-    Socket.prototype.reconnect = function () {
+    Socket.prototype.reconnect = function() {
       this.reconnecting = true;
       this.reconnectionAttempts = 0;
-      this.reconnectionDelay = this.options['reconnection delay'];
+      this.reconnectionDelay = this.options["reconnection delay"];
 
-      var self = this
-        , maxAttempts = this.options['max reconnection attempts']
-        , tryMultiple = this.options['try multiple transports']
-        , limit = this.options['reconnection limit'];
+      var self = this,
+        maxAttempts = this.options["max reconnection attempts"],
+        tryMultiple = this.options["try multiple transports"],
+        limit = this.options["reconnection limit"];
 
       function reset() {
         if (self.connected) {
           for (var i in self.namespaces) {
-            if (self.namespaces.hasOwnProperty(i) && '' !== i) {
-              self.namespaces[i].packet({ type: 'connect' });
+            if (self.namespaces.hasOwnProperty(i) && "" !== i) {
+              self.namespaces[i].packet({ type: "connect" });
             }
           }
-          self.publish('reconnect', self.transport.name, self.reconnectionAttempts);
+          self.publish(
+            "reconnect",
+            self.transport.name,
+            self.reconnectionAttempts
+          );
         }
 
         clearTimeout(self.reconnectionTimer);
 
-        self.removeListener('connect_failed', maybeReconnect);
-        self.removeListener('connect', maybeReconnect);
+        self.removeListener("connect_failed", maybeReconnect);
+        self.removeListener("connect", maybeReconnect);
 
         self.reconnecting = false;
 
@@ -1165,8 +1174,8 @@
         delete self.reconnectionTimer;
         delete self.redoTransports;
 
-        self.options['try multiple transports'] = tryMultiple;
-      };
+        self.options["try multiple transports"] = tryMultiple;
+      }
 
       function maybeReconnect() {
         if (!self.reconnecting) {
@@ -1175,22 +1184,22 @@
 
         if (self.connected) {
           return reset();
-        };
+        }
 
         if (self.connecting && self.reconnecting) {
-          return self.reconnectionTimer = setTimeout(maybeReconnect, 1000);
+          return (self.reconnectionTimer = setTimeout(maybeReconnect, 1000));
         }
 
         if (self.reconnectionAttempts++ >= maxAttempts) {
           if (!self.redoTransports) {
-            self.on('connect_failed', maybeReconnect);
-            self.options['try multiple transports'] = true;
+            self.on("connect_failed", maybeReconnect);
+            self.options["try multiple transports"] = true;
             self.transports = self.origTransports;
             self.transport = self.getTransport();
             self.redoTransports = true;
             self.connect();
           } else {
-            self.publish('reconnect_failed');
+            self.publish("reconnect_failed");
             reset();
           }
         } else {
@@ -1199,25 +1208,31 @@
           }
 
           self.connect();
-          self.publish('reconnecting', self.reconnectionDelay, self.reconnectionAttempts);
-          self.reconnectionTimer = setTimeout(maybeReconnect, self.reconnectionDelay);
+          self.publish(
+            "reconnecting",
+            self.reconnectionDelay,
+            self.reconnectionAttempts
+          );
+          self.reconnectionTimer = setTimeout(
+            maybeReconnect,
+            self.reconnectionDelay
+          );
         }
-      };
+      }
 
-      this.options['try multiple transports'] = false;
-      this.reconnectionTimer = setTimeout(maybeReconnect, this.reconnectionDelay);
+      this.options["try multiple transports"] = false;
+      this.reconnectionTimer = setTimeout(
+        maybeReconnect,
+        this.reconnectionDelay
+      );
 
-      this.on('connect', maybeReconnect);
+      this.on("connect", maybeReconnect);
     };
-
   })(
-    'undefined' != typeof io ? io : module.exports
-    , 'undefined' != typeof io ? io : module.parent.exports
-    , this
-    );
-
-
-
+    "undefined" != typeof io ? io : module.exports,
+    "undefined" != typeof io ? io : module.parent.exports,
+    this
+  );
 
   /**
    * socket.io
@@ -1225,8 +1240,7 @@
    * MIT Licensed
    */
 
-  (function (exports, io) {
-
+  (function(exports, io) {
     /**
      * Expose constructor.
      */
@@ -1242,12 +1256,12 @@
 
     function SocketNamespace(socket, name) {
       this.socket = socket;
-      this.name = name || '';
+      this.name = name || "";
       this.flags = {};
-      this.json = new Flag(this, 'json');
+      this.json = new Flag(this, "json");
       this.ackPackets = 0;
       this.acks = {};
-    };
+    }
 
     /**
      * Apply EventEmitter mixin.
@@ -1271,7 +1285,7 @@
      * @api public
      */
 
-    SocketNamespace.prototype.of = function () {
+    SocketNamespace.prototype.of = function() {
       return this.socket.of.apply(this.socket, arguments);
     };
 
@@ -1281,7 +1295,7 @@
      * @api private
      */
 
-    SocketNamespace.prototype.packet = function (packet) {
+    SocketNamespace.prototype.packet = function(packet) {
       packet.endpoint = this.name;
       this.socket.packet(packet);
       this.flags = {};
@@ -1294,13 +1308,13 @@
      * @api public
      */
 
-    SocketNamespace.prototype.send = function (data, fn) {
+    SocketNamespace.prototype.send = function(data, fn) {
       var packet = {
-        type: this.flags.json ? 'json' : 'message'
-        , data: data
+        type: this.flags.json ? "json" : "message",
+        data: data
       };
 
-      if ('function' == typeof fn) {
+      if ("function" == typeof fn) {
         packet.id = ++this.ackPackets;
         packet.ack = true;
         this.acks[packet.id] = fn;
@@ -1315,17 +1329,17 @@
      * @api public
      */
 
-    SocketNamespace.prototype.emit = function (name) {
-      var args = Array.prototype.slice.call(arguments, 1)
-        , lastArg = args[args.length - 1]
-        , packet = {
-          type: 'event'
-          , name: name
+    SocketNamespace.prototype.emit = function(name) {
+      var args = Array.prototype.slice.call(arguments, 1),
+        lastArg = args[args.length - 1],
+        packet = {
+          type: "event",
+          name: name
         };
 
-      if ('function' == typeof lastArg) {
+      if ("function" == typeof lastArg) {
         packet.id = ++this.ackPackets;
-        packet.ack = 'data';
+        packet.ack = "data";
         this.acks[packet.id] = lastArg;
         args = args.slice(0, args.length - 1);
       }
@@ -1341,12 +1355,12 @@
      * @api private
      */
 
-    SocketNamespace.prototype.disconnect = function () {
-      if (this.name === '') {
+    SocketNamespace.prototype.disconnect = function() {
+      if (this.name === "") {
         this.socket.disconnect();
       } else {
-        this.packet({ type: 'disconnect' });
-        this.$emit('disconnect');
+        this.packet({ type: "disconnect" });
+        this.$emit("disconnect");
       }
 
       return this;
@@ -1358,67 +1372,66 @@
      * @api private
      */
 
-    SocketNamespace.prototype.onPacket = function (packet) {
+    SocketNamespace.prototype.onPacket = function(packet) {
       var self = this;
 
       function ack() {
         self.packet({
-          type: 'ack'
-          , args: io.util.toArray(arguments)
-          , ackId: packet.id
+          type: "ack",
+          args: io.util.toArray(arguments),
+          ackId: packet.id
         });
-      };
+      }
 
       switch (packet.type) {
-        case 'connect':
-          this.$emit('connect');
+        case "connect":
+          this.$emit("connect");
           break;
 
-        case 'disconnect':
-          if (this.name === '') {
-            this.socket.onDisconnect(packet.reason || 'booted');
+        case "disconnect":
+          if (this.name === "") {
+            this.socket.onDisconnect(packet.reason || "booted");
           } else {
-            this.$emit('disconnect', packet.reason);
+            this.$emit("disconnect", packet.reason);
           }
           break;
 
-        case 'message':
-        case 'json':
-          var params = ['message', packet.data];
+        case "message":
+        case "json":
+          var params = ["message", packet.data];
 
-          if (packet.ack == 'data') {
+          if (packet.ack == "data") {
             params.push(ack);
           } else if (packet.ack) {
-            this.packet({ type: 'ack', ackId: packet.id });
+            this.packet({ type: "ack", ackId: packet.id });
           }
 
           this.$emit.apply(this, params);
           break;
 
-        case 'event':
+        case "event":
           var params = [packet.name].concat(packet.args);
 
-          if (packet.ack == 'data')
-            params.push(ack);
+          if (packet.ack == "data") params.push(ack);
 
           this.$emit.apply(this, params);
           break;
 
-        case 'ack':
+        case "ack":
           if (this.acks[packet.ackId]) {
             this.acks[packet.ackId].apply(this, packet.args);
             delete this.acks[packet.ackId];
           }
           break;
 
-        case 'error':
+        case "error":
           if (packet.advice) {
             this.socket.onError(packet);
           } else {
-            if (packet.reason == 'unauthorized') {
-              this.$emit('connect_failed', packet.reason);
+            if (packet.reason == "unauthorized") {
+              this.$emit("connect_failed", packet.reason);
             } else {
-              this.$emit('error', packet.reason);
+              this.$emit("error", packet.reason);
             }
           }
           break;
@@ -1434,7 +1447,7 @@
     function Flag(nsp, name) {
       this.namespace = nsp;
       this.name = name;
-    };
+    }
 
     /**
      * Send a message
@@ -1442,7 +1455,7 @@
      * @api public
      */
 
-    Flag.prototype.send = function () {
+    Flag.prototype.send = function() {
       this.namespace.flags[this.name] = true;
       this.namespace.send.apply(this.namespace, arguments);
     };
@@ -1453,16 +1466,14 @@
      * @api public
      */
 
-    Flag.prototype.emit = function () {
+    Flag.prototype.emit = function() {
       this.namespace.flags[this.name] = true;
       this.namespace.emit.apply(this.namespace, arguments);
     };
-
   })(
-    'undefined' != typeof io ? io : module.exports
-    , 'undefined' != typeof io ? io : module.parent.exports
-    );
-
+    "undefined" != typeof io ? io : module.exports,
+    "undefined" != typeof io ? io : module.parent.exports
+  );
 
   /**
    * socket.io
@@ -1470,8 +1481,7 @@
    * MIT Licensed
    */
 
-  (function (exports, io) {
-
+  (function(exports, io) {
     /**
      * Expose constructor.
      */
@@ -1488,7 +1498,7 @@
     function Transport(socket, sessid) {
       this.socket = socket;
       this.sessid = sessid;
-    };
+    }
 
     /**
      * Apply EventEmitter mixin.
@@ -1496,16 +1506,15 @@
 
     io.util.mixin(Transport, io.EventEmitter);
 
-
     /**
      * Indicates whether heartbeats is enabled for this transport
      *
      * @api private
      */
 
-    Transport.prototype.heartbeats = function () {
+    Transport.prototype.heartbeats = function() {
       return true;
-    }
+    };
 
     /**
      * Handles the response from the server. When a new response is received
@@ -1516,17 +1525,21 @@
      * @api private
      */
 
-    Transport.prototype.onData = function (data) {
+    Transport.prototype.onData = function(data) {
       this.clearCloseTimeout();
 
       // If the connection in currently open (or in a reopening state) reset the close
       // timeout since we have just received data. This check is necessary so
       // that we don't reset the timeout on an explicitly disconnected connection.
-      if (this.socket.connected || this.socket.connecting || this.socket.reconnecting) {
+      if (
+        this.socket.connected ||
+        this.socket.connecting ||
+        this.socket.reconnecting
+      ) {
         this.setCloseTimeout();
       }
 
-      if (data !== '') {
+      if (data !== "") {
         // todo: we should only do decodePayload for xhr transports
         var msgs = io.parser.decodePayload(data);
 
@@ -1546,18 +1559,18 @@
      * @api private
      */
 
-    Transport.prototype.onPacket = function (packet) {
+    Transport.prototype.onPacket = function(packet) {
       this.socket.setHeartbeatTimeout();
 
-      if (packet.type == 'heartbeat') {
+      if (packet.type == "heartbeat") {
         return this.onHeartbeat();
       }
 
-      if (packet.type == 'connect' && packet.endpoint == '') {
+      if (packet.type == "connect" && packet.endpoint == "") {
         this.onConnect();
       }
 
-      if (packet.type == 'error' && packet.advice == 'reconnect') {
+      if (packet.type == "error" && packet.advice == "reconnect") {
         this.isOpen = false;
       }
 
@@ -1572,11 +1585,11 @@
      * @api private
      */
 
-    Transport.prototype.setCloseTimeout = function () {
+    Transport.prototype.setCloseTimeout = function() {
       if (!this.closeTimeout) {
         var self = this;
 
-        this.closeTimeout = setTimeout(function () {
+        this.closeTimeout = setTimeout(function() {
           self.onDisconnect();
         }, this.socket.closeTimeout);
       }
@@ -1588,7 +1601,7 @@
      * @api private
      */
 
-    Transport.prototype.onDisconnect = function () {
+    Transport.prototype.onDisconnect = function() {
       if (this.isOpen) this.close();
       this.clearTimeouts();
       this.socket.onDisconnect();
@@ -1601,10 +1614,10 @@
      * @api private
      */
 
-    Transport.prototype.onConnect = function () {
+    Transport.prototype.onConnect = function() {
       this.socket.onConnect();
       return this;
-    }
+    };
 
     /**
      * Clears close timeout
@@ -1612,7 +1625,7 @@
      * @api private
      */
 
-    Transport.prototype.clearCloseTimeout = function () {
+    Transport.prototype.clearCloseTimeout = function() {
       if (this.closeTimeout) {
         clearTimeout(this.closeTimeout);
         this.closeTimeout = null;
@@ -1625,7 +1638,7 @@
      * @api private
      */
 
-    Transport.prototype.clearTimeouts = function () {
+    Transport.prototype.clearTimeouts = function() {
       this.clearCloseTimeout();
 
       if (this.reopenTimeout) {
@@ -1640,7 +1653,7 @@
      * @api private
      */
 
-    Transport.prototype.packet = function (packet) {
+    Transport.prototype.packet = function(packet) {
       this.send(io.parser.encodePacket(packet));
     };
 
@@ -1652,8 +1665,8 @@
      * @api private
      */
 
-    Transport.prototype.onHeartbeat = function (heartbeat) {
-      this.packet({ type: 'heartbeat' });
+    Transport.prototype.onHeartbeat = function(heartbeat) {
+      this.packet({ type: "heartbeat" });
     };
 
     /**
@@ -1662,7 +1675,7 @@
      * @api private
      */
 
-    Transport.prototype.onOpen = function () {
+    Transport.prototype.onOpen = function() {
       this.isOpen = true;
       this.clearCloseTimeout();
       this.socket.onOpen();
@@ -1675,7 +1688,7 @@
      * @api private
      */
 
-    Transport.prototype.onClose = function () {
+    Transport.prototype.onClose = function() {
       var self = this;
 
       /* FIXME: reopen delay causing a infinit loop
@@ -1696,13 +1709,24 @@
      * @api private
      */
 
-    Transport.prototype.prepareUrl = function () {
+    Transport.prototype.prepareUrl = function() {
       var options = this.socket.options;
 
-      return this.scheme() + '://'
-        + options.host + ':' + options.port + '/'
-        + options.resource + '/' + io.protocol
-        + '/' + this.name + '/' + this.sessid;
+      return (
+        this.scheme() +
+        "://" +
+        options.host +
+        ":" +
+        options.port +
+        "/" +
+        options.resource +
+        "/" +
+        io.protocol +
+        "/" +
+        this.name +
+        "/" +
+        this.sessid
+      );
     };
 
     /**
@@ -1713,15 +1737,13 @@
      * @api private
      */
 
-    Transport.prototype.ready = function (socket, fn) {
+    Transport.prototype.ready = function(socket, fn) {
       fn.call(this);
     };
   })(
-    'undefined' != typeof io ? io : module.exports
-    , 'undefined' != typeof io ? io : module.parent.exports
-    );
-
-
+    "undefined" != typeof io ? io : module.exports,
+    "undefined" != typeof io ? io : module.parent.exports
+  );
 
   /**
    * socket.io
@@ -1729,8 +1751,7 @@
    * MIT Licensed
    */
 
-  (function (exports, io, global) {
-
+  (function(exports, io, global) {
     /**
      * Expose constructor.
      */
@@ -1750,7 +1771,7 @@
 
     function WS(socket) {
       io.Transport.apply(this, arguments);
-    };
+    }
 
     /**
      * Inherits from Transport.
@@ -1764,7 +1785,7 @@
      * @api public
      */
 
-    WS.prototype.name = 'websocket';
+    WS.prototype.name = "websocket";
 
     /**
      * Initializes a new `WebSocket` connection with the Socket.IO server. We attach
@@ -1774,82 +1795,74 @@
      * @api public
      */
 
-    WS.prototype.open = function () {
-      var query = io.util.query(this.socket.options.query)
-        , self = this
-        , Socket
-
-
+    WS.prototype.open = function() {
+      var query = io.util.query(this.socket.options.query),
+        self = this,
+        Socket;
 
       //微信Socket
       Socket = wx.connectSocket;
-
 
       //开始连接
       var url = this.prepareUrl() + query;
       this.websocket = new Socket({
         url: url,
         data: {
-          x: '',
-          y: ''
+          x: "",
+          y: ""
         },
         header: {
-          'content-type': 'application/json'
+          "content-type": "application/json"
         },
-        protocols: ['protocol1'],
+        protocols: ["protocol1"],
         method: "GET"
       });
 
-      wx.onSocketOpen(function (res) {
-        console.log('WebSocket连接已打开！')
+      wx.onSocketOpen(function(res) {
+        console.log("WebSocket连接已打开！");
 
         self.onOpen();
         self.socket.setBuffer(false);
-      })
+      });
 
-      wx.onSocketError(function (res) {
-        console.log('WebSocket连接打开失败，请检查！')
-      })
+      wx.onSocketError(function(res) {
+        console.log("WebSocket连接打开失败，请检查！");
+      });
 
-
-
-      wx.onSocketMessage(function (res) {
-        console.log('收到服务器内容：' + res.data)
+      wx.onSocketMessage(function(res) {
+        console.log("收到服务器内容：" + res.data);
         self.onData(res.data);
-      })
+      });
 
-      this.websocket.send = function (res) {
-        console.log("发送一次消息", res)
+      this.websocket.send = function(res) {
+        console.log("发送一次消息", res);
         wx.sendSocketMessage({
           data: res
-        })
+        });
       };
 
-
-      wx.onSocketClose(function (res) {
+      wx.onSocketClose(function(res) {
         self.onClose();
         self.socket.setBuffer(true);
-        console.log('WebSocket 已关闭！')
-      })
+        console.log("WebSocket 已关闭！");
+      });
 
-      this.websocket.close = function (res) {
+      this.websocket.close = function(res) {
         wx.closeSocket();
-      }
+      };
 
-
-
-      this.websocket.onopen = function () {
+      this.websocket.onopen = function() {
         self.onOpen();
         self.socket.setBuffer(false);
       };
-      this.websocket.onmessage = function (ev) {
+      this.websocket.onmessage = function(ev) {
         self.onData(ev.data);
       };
-      this.websocket.onclose = function () {
+      this.websocket.onclose = function() {
         self.onClose();
         self.socket.setBuffer(true);
       };
-      this.websocket.onerror = function (e) {
+      this.websocket.onerror = function(e) {
         self.onError(e);
       };
 
@@ -1868,15 +1881,15 @@
     // setTimeout, when they resume from sleeping the browser will crash if
     // we don't allow the browser time to detect the socket has been closed
     if (io.util.ua.iDevice) {
-      WS.prototype.send = function (data) {
+      WS.prototype.send = function(data) {
         var self = this;
-        setTimeout(function () {
+        setTimeout(function() {
           self.websocket.send(data);
         }, 0);
         return this;
       };
     } else {
-      WS.prototype.send = function (data) {
+      WS.prototype.send = function(data) {
         this.websocket.send(data);
         return this;
       };
@@ -1888,7 +1901,7 @@
      * @api private
      */
 
-    WS.prototype.payload = function (arr) {
+    WS.prototype.payload = function(arr) {
       for (var i = 0, l = arr.length; i < l; i++) {
         this.packet(arr[i]);
       }
@@ -1902,7 +1915,7 @@
      * @api public
      */
 
-    WS.prototype.close = function () {
+    WS.prototype.close = function() {
       this.websocket.close();
       return this;
     };
@@ -1915,7 +1928,7 @@
      * @api private
      */
 
-    WS.prototype.onError = function (e) {
+    WS.prototype.onError = function(e) {
       this.socket.onError(e);
     };
 
@@ -1924,8 +1937,8 @@
      *
      * @api private
      */
-    WS.prototype.scheme = function () {
-      return this.socket.options.secure ? 'wss' : 'wss';
+    WS.prototype.scheme = function() {
+      return this.socket.options.secure ? "wss" : "wss";
     };
 
     /**
@@ -1936,9 +1949,11 @@
      * @api public
      */
 
-    WS.check = function () {
-      return ('WebSocket' in global && !('__addTask' in WebSocket))
-        || 'MozWebSocket' in global;
+    WS.check = function() {
+      return (
+        ("WebSocket" in global && !("__addTask" in WebSocket)) ||
+        "MozWebSocket" in global
+      );
     };
 
     /**
@@ -1948,7 +1963,7 @@
      * @api public
      */
 
-    WS.xdomainCheck = function () {
+    WS.xdomainCheck = function() {
       return true;
     };
 
@@ -1958,15 +1973,12 @@
      * @api private
      */
 
-    io.transports.push('websocket');
-
+    io.transports.push("websocket");
   })(
-    'undefined' != typeof io ? io.Transport : module.exports
-    , 'undefined' != typeof io ? io : module.parent.exports
-    , this
-    );
-
-
+    "undefined" != typeof io ? io.Transport : module.exports,
+    "undefined" != typeof io ? io : module.parent.exports,
+    this
+  );
 
   /**
    * socket.io
@@ -1974,56 +1986,54 @@
    * MIT Licensed
    */
 
-  (function (exports, io) {
-    console.log('9999', exports, 'lllll', io, '000000');
+  (function(exports, io) {
+    console.log("9999", exports, "lllll", io, "000000");
     /**
      * Parser namespace.
      *
      * @namespace
      */
 
-    var parser = exports.parser = {};
+    var parser = (exports.parser = {});
 
     /**
      * Packet types.
      */
 
-    var packets = parser.packets = [
-      'disconnect'
-      , 'connect'
-      , 'heartbeat'
-      , 'message'
-      , 'json'
-      , 'event'
-      , 'ack'
-      , 'error'
-      , 'noop'
-    ];
+    var packets = (parser.packets = [
+      "disconnect",
+      "connect",
+      "heartbeat",
+      "message",
+      "json",
+      "event",
+      "ack",
+      "error",
+      "noop"
+    ]);
 
     /**
      * Errors reasons.
      */
 
-    var reasons = parser.reasons = [
-      'transport not supported'
-      , 'client not handshaken'
-      , 'unauthorized'
-    ];
+    var reasons = (parser.reasons = [
+      "transport not supported",
+      "client not handshaken",
+      "unauthorized"
+    ]);
 
     /**
      * Errors advice.
      */
 
-    var advice = parser.advice = [
-      'reconnect'
-    ];
+    var advice = (parser.advice = ["reconnect"]);
 
     /**
      * Shortcuts.
      */
 
-    var JSON = io.JSON
-      , indexOf = io.util.indexOf;
+    var JSON = io.JSON,
+      indexOf = io.util.indexOf;
 
     /**
      * Encodes a packet.
@@ -2031,29 +2041,28 @@
      * @api private
      */
 
-    parser.encodePacket = function (packet) {
-      var type = indexOf(packets, packet.type)
-        , id = packet.id || ''
-        , endpoint = packet.endpoint || ''
-        , ack = packet.ack
-        , data = null;
+    parser.encodePacket = function(packet) {
+      var type = indexOf(packets, packet.type),
+        id = packet.id || "",
+        endpoint = packet.endpoint || "",
+        ack = packet.ack,
+        data = null;
 
       switch (packet.type) {
-        case 'error':
-          var reason = packet.reason ? indexOf(reasons, packet.reason) : ''
-            , adv = packet.advice ? indexOf(advice, packet.advice) : '';
+        case "error":
+          var reason = packet.reason ? indexOf(reasons, packet.reason) : "",
+            adv = packet.advice ? indexOf(advice, packet.advice) : "";
 
-          if (reason !== '' || adv !== '')
-            data = reason + (adv !== '' ? ('+' + adv) : '');
+          if (reason !== "" || adv !== "")
+            data = reason + (adv !== "" ? "+" + adv : "");
 
           break;
 
-        case 'message':
-          if (packet.data !== '')
-            data = packet.data;
+        case "message":
+          if (packet.data !== "") data = packet.data;
           break;
 
-        case 'event':
+        case "event":
           var ev = { name: packet.name };
 
           if (packet.args && packet.args.length) {
@@ -2063,34 +2072,30 @@
           data = JSON.stringify(ev);
           break;
 
-        case 'json':
+        case "json":
           data = JSON.stringify(packet.data);
           break;
 
-        case 'connect':
-          if (packet.qs)
-            data = packet.qs;
+        case "connect":
+          if (packet.qs) data = packet.qs;
           break;
 
-        case 'ack':
-          data = packet.ackId
-            + (packet.args && packet.args.length
-              ? '+' + JSON.stringify(packet.args) : '');
+        case "ack":
+          data =
+            packet.ackId +
+            (packet.args && packet.args.length
+              ? "+" + JSON.stringify(packet.args)
+              : "");
           break;
       }
 
       // construct packet with required fragments
-      var encoded = [
-        type
-        , id + (ack == 'data' ? '+' : '')
-        , endpoint
-      ];
+      var encoded = [type, id + (ack == "data" ? "+" : ""), endpoint];
 
       // data fragment is optional
-      if (data !== null && data !== undefined)
-        encoded.push(data);
+      if (data !== null && data !== undefined) encoded.push(data);
 
-      return encoded.join(':');
+      return encoded.join(":");
     };
 
     /**
@@ -2100,15 +2105,14 @@
      * @api private
      */
 
-    parser.encodePayload = function (packets) {
-      var decoded = '';
+    parser.encodePayload = function(packets) {
+      var decoded = "";
 
-      if (packets.length == 1)
-        return packets[0];
+      if (packets.length == 1) return packets[0];
 
       for (var i = 0, l = packets.length; i < l; i++) {
         var packet = packets[i];
-        decoded += '\ufffd' + packet.length + '\ufffd' + packets[i];
+        decoded += "\ufffd" + packet.length + "\ufffd" + packets[i];
       }
 
       return decoded;
@@ -2122,60 +2126,58 @@
 
     var regexp = /([^:]+):([0-9]+)?(\+)?:([^:]+)?:?([\s\S]*)?/;
 
-    parser.decodePacket = function (data) {
+    parser.decodePacket = function(data) {
       var pieces = data.match(regexp);
 
       if (!pieces) return {};
 
-      var id = pieces[2] || ''
-        , data = pieces[5] || ''
-        , packet = {
-          type: packets[pieces[1]]
-          , endpoint: pieces[4] || ''
+      var id = pieces[2] || "",
+        data = pieces[5] || "",
+        packet = {
+          type: packets[pieces[1]],
+          endpoint: pieces[4] || ""
         };
 
       // whether we need to acknowledge the packet
       if (id) {
         packet.id = id;
-        if (pieces[3])
-          packet.ack = 'data';
-        else
-          packet.ack = true;
+        if (pieces[3]) packet.ack = "data";
+        else packet.ack = true;
       }
 
       // handle different packet types
       switch (packet.type) {
-        case 'error':
-          var pieces = data.split('+');
-          packet.reason = reasons[pieces[0]] || '';
-          packet.advice = advice[pieces[1]] || '';
+        case "error":
+          var pieces = data.split("+");
+          packet.reason = reasons[pieces[0]] || "";
+          packet.advice = advice[pieces[1]] || "";
           break;
 
-        case 'message':
-          packet.data = data || '';
+        case "message":
+          packet.data = data || "";
           break;
 
-        case 'event':
+        case "event":
           try {
             var opts = JSON.parse(data);
             packet.name = opts.name;
             packet.args = opts.args;
-          } catch (e) { }
+          } catch (e) {}
 
           packet.args = packet.args || [];
           break;
 
-        case 'json':
+        case "json":
           try {
             packet.data = JSON.parse(data);
-          } catch (e) { }
+          } catch (e) {}
           break;
 
-        case 'connect':
-          packet.qs = data || '';
+        case "connect":
+          packet.qs = data || "";
           break;
 
-        case 'ack':
+        case "ack":
           var pieces = data.match(/^([0-9]+)(\+)?(.*)/);
           if (pieces) {
             packet.ackId = pieces[1];
@@ -2184,15 +2186,15 @@
             if (pieces[3]) {
               try {
                 packet.args = pieces[3] ? JSON.parse(pieces[3]) : [];
-              } catch (e) { }
+              } catch (e) {}
             }
           }
           break;
 
-        case 'disconnect':
-        case 'heartbeat':
+        case "disconnect":
+        case "heartbeat":
           break;
-      };
+      }
 
       return packet;
     };
@@ -2204,16 +2206,16 @@
      * @api public
      */
 
-    parser.decodePayload = function (data) {
+    parser.decodePayload = function(data) {
       // IE doesn't like data[i] for unicode chars, charAt works fine
-      if (data.charAt(0) == '\ufffd') {
+      if (data.charAt(0) == "\ufffd") {
         var ret = [];
 
-        for (var i = 1, length = ''; i < data.length; i++) {
-          if (data.charAt(i) == '\ufffd') {
+        for (var i = 1, length = ""; i < data.length; i++) {
+          if (data.charAt(i) == "\ufffd") {
             ret.push(parser.decodePacket(data.substr(i + 1).substr(0, length)));
             i += Number(length) + 1;
-            length = '';
+            length = "";
           } else {
             length += data.charAt(i);
           }
@@ -2224,13 +2226,10 @@
         return [parser.decodePacket(data)];
       }
     };
-
   })(
-    'undefined' != typeof io ? io : module.exports
-    , 'undefined' != typeof io ? io : module.parent.exports
-    );
-
-
+    "undefined" != typeof io ? io : module.exports,
+    "undefined" != typeof io ? io : module.parent.exports
+  );
 
   /**
    * socket.io
@@ -2238,15 +2237,13 @@
    * MIT Licensed
    */
 
-
-
   /**
  * 初始化时需要调用这个函数。可以从BmobSocketIo中获取所需的key
  *
  * @param {String} applicationId 你的 Application ID.
  * @param {String} masterKey (optional) 你的 BmobSocketIo Master Key.
  */
-  BmobSocketIo.initialize = function (applicationId) {
+  BmobSocketIo.initialize = function(applicationId) {
     if (!applicationId) {
       throw "BmobSocketIo.initialize() need a applicationId";
     }
@@ -2257,13 +2254,12 @@
 
   BmobSocketIo.obj = null;
 
-  BmobSocketIo.init = function (applicationId) {
+  BmobSocketIo.init = function(applicationId) {
     //sockeit obj
     BmobSocketIo.obj = io.connect(BmobSocketIo.serverURL);
 
     //监听服务器的响应
-    BmobSocketIo.obj.on("server_pub", function (resp) {
-
+    BmobSocketIo.obj.on("server_pub", function(resp) {
       var data = JSON.parse(resp);
 
       switch (data.action) {
@@ -2283,25 +2279,21 @@
     });
 
     // //连接上socket.io服务器后触发的事件
-    BmobSocketIo.obj.on("client_send_data", function (resp) {
+    BmobSocketIo.obj.on("client_send_data", function(resp) {
       io.BmobSocketIo.onInitListen();
     });
 
-
-
     BmobSocketIo.obj.on("disconnect", function() {
-      console.log("You have disconnected from the server")
-    })
-
+      console.log("You have disconnected from the server");
+    });
   };
-
 
   /**
    * Call this method first to set up authentication tokens for BmobSocketIo.
    * This method is for BmobSocketIo's own private use.
    * @param {String} applicationId Your BmobSocketIo Application ID
    */
-  BmobSocketIo._initialize = function (applicationId) {
+  BmobSocketIo._initialize = function(applicationId) {
     BmobSocketIo.applicationId = applicationId;
 
     // //sockeit obj
@@ -2332,105 +2324,111 @@
     // BmobSocketIo.obj.on("client_send_data", function (resp) {
     //   io.BmobSocketIo.onInitListen();
     // });
-
   };
-
-
 
   //"unsub_updateTable" ,"unsub_updateRow", "unsub_deleteTable", "unsub_deleteRow"
   //订阅更新数据表的数据
-  BmobSocketIo.updateTable = function (tablename) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": "", "action": "updateTable" };
+  BmobSocketIo.updateTable = function(tablename) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: "",
+      action: "updateTable"
+    };
     BmobSocketIo.obj.emit("client_sub", JSON.stringify(data));
-
   };
 
   //取消订阅更新数据表的数据
-  BmobSocketIo.unsubUpdateTable = function (tablename) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": "", "action": "unsub_updateTable" };
+  BmobSocketIo.unsubUpdateTable = function(tablename) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: "",
+      action: "unsub_updateTable"
+    };
     BmobSocketIo.obj.emit("client_unsub", JSON.stringify(data));
-
   };
-
 
   //订阅行更新的数据
-  BmobSocketIo.updateRow = function (tablename, objectId) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": objectId, "action": "updateRow" };
+  BmobSocketIo.updateRow = function(tablename, objectId) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: objectId,
+      action: "updateRow"
+    };
     BmobSocketIo.obj.emit("client_sub", JSON.stringify(data));
-
   };
 
-
   //取消订阅行更新的数据
-  BmobSocketIo.unsubUpdateRow = function (tablename, objectId) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": objectId, "action": "unsub_updateRow" };
+  BmobSocketIo.unsubUpdateRow = function(tablename, objectId) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: objectId,
+      action: "unsub_updateRow"
+    };
     BmobSocketIo.obj.emit("client_unsub", JSON.stringify(data));
-
   };
 
   //订阅表删除的数据
-  BmobSocketIo.deleteTable = function (tablename) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": "", "action": "deleteTable" };
+  BmobSocketIo.deleteTable = function(tablename) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: "",
+      action: "deleteTable"
+    };
     BmobSocketIo.obj.emit("client_sub", JSON.stringify(data));
-
   };
 
   //取消订阅表删除的数据
-  BmobSocketIo.unsubDeleteTable = function (tablename) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": "", "action": "unsub_deleteTable" };
+  BmobSocketIo.unsubDeleteTable = function(tablename) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: "",
+      action: "unsub_deleteTable"
+    };
     BmobSocketIo.obj.emit("client_unsub", JSON.stringify(data));
-
   };
 
   //订阅更新数据表的数据
-  BmobSocketIo.deleteRow = function (tablename, objectId) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": objectId, "action": "deleteRow" };
+  BmobSocketIo.deleteRow = function(tablename, objectId) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: objectId,
+      action: "deleteRow"
+    };
     BmobSocketIo.obj.emit("client_sub", JSON.stringify(data));
-
   };
 
   //订阅更新数据表的数据
-  BmobSocketIo.unsubDeleteRow = function (tablename, objectId) {
-
-    var data = { "appKey": BmobSocketIo.applicationId, "tableName": tablename, "objectId": objectId, "action": "unsub_deleteRow" };
+  BmobSocketIo.unsubDeleteRow = function(tablename, objectId) {
+    var data = {
+      appKey: BmobSocketIo.applicationId,
+      tableName: tablename,
+      objectId: objectId,
+      action: "unsub_deleteRow"
+    };
     BmobSocketIo.obj.emit("client_unsub", JSON.stringify(data));
-
-  };
-
-
-
-  //监听服务器返回的更新数据表的数据，需要用户重写
-  BmobSocketIo.onUpdateTable = function (tablename, data) {
-
   };
 
   //监听服务器返回的更新数据表的数据，需要用户重写
-  BmobSocketIo.onUpdateRow = function (tablename, objectId, data) {
-
-  };
+  BmobSocketIo.onUpdateTable = function(tablename, data) {};
 
   //监听服务器返回的更新数据表的数据，需要用户重写
-  BmobSocketIo.onDeleteTable = function (tablename, data) {
-
-  };
+  BmobSocketIo.onUpdateRow = function(tablename, objectId, data) {};
 
   //监听服务器返回的更新数据表的数据，需要用户重写
-  BmobSocketIo.onDeleteRow = function (tablename, objectId, data) {
+  BmobSocketIo.onDeleteTable = function(tablename, data) {};
 
-  };
+  //监听服务器返回的更新数据表的数据，需要用户重写
+  BmobSocketIo.onDeleteRow = function(tablename, objectId, data) {};
 
   //初始连接socket.io服务器后，需要监听的事件都写在这个函数内，
   //注意，必须要把监听的数据写在这个函数内，
   //当浏览器因意外断网后，服务器上的订阅事件会取消，js脚本会重新连接服务器，写在这个函数内的订阅事件会重新在服务器上订阅
-  BmobSocketIo.onInitListen = function () {
-
-  };
-
+  BmobSocketIo.onInitListen = function() {};
 }.call(this));
