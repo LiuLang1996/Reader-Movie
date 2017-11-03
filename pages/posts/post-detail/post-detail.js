@@ -1,5 +1,5 @@
-// pages/posts/post-detail/post-detail.js
-import postList from "../../../data/posts-data.js";
+const AV = require('../../../utils/av-weapp-min.js');
+
 Page({
   /**
    * 页面的初始数据
@@ -12,14 +12,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    /**
-     * 初始化信息
-     * @param {Number} currentPostId - 文章Id
-     * @param {Array} postData - 文章详情数据
-     */
-    this.setData({
-      currentPostId: options.id,
-      postData: postList.postList[options.id]
+
+    let that = this;
+    let query = new AV.Query('postList');
+    query.equalTo('postId', Number.parseInt(options.id));
+    query.find().then((res) => {
+      /**
+       * 初始化信息
+       * @param {Number} currentPostId - 文章Id
+       * @param {Array} postData - 文章详情数据
+       */
+      that.setData({
+        currentPostId: options.id,
+        postData: res[0].attributes
+      });
+      console.log(this.data.postData);
     });
     /**
      * 从缓存中获取所有文章的收藏数据
@@ -31,7 +38,7 @@ Page({
      */
     if (postsCollected) {
       let collected = postsCollected[options.id];
-      this.setData({
+      that.setData({
         collected: collected
       });
     } else {
@@ -41,8 +48,8 @@ Page({
     }
 
     // 当音乐播放完成后回复图片
-    wx.onBackgroundAudioStop(function(e) {
-      this.setData({
+    wx.onBackgroundAudioStop(function (e) {
+      that.setData({
         isPlayingMusic: false
       });
     });
@@ -81,7 +88,7 @@ Page({
   onShareTap(event) {
     wx.showActionSheet({
       itemList: ["分享给微信好友", "分享到朋友圈"],
-      success: function(res) {
+      success: function (res) {
         console.log(res.tapIndex);
       }
     });

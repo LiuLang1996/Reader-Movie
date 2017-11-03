@@ -1,4 +1,4 @@
-import { postList } from "../../data/posts-data.js";
+const AV = require('./../../utils/av-weapp-min.js');
 
 Page({
   /**
@@ -29,10 +29,18 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.setData({
-      postLists: postList
+    let query = new AV.Query('postList');
+    let results = [];
+    query.find().then((res) => {
+      for (let r of res) {
+        results.push(r.attributes);
+      }
+      this.setData({
+        postLists: results
+      });
     });
   },
+
   /**
    * 页面跳转--从文章列表页面跳转到对应的文章详情页面
    */
