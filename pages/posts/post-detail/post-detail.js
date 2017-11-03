@@ -17,6 +17,11 @@ Page({
     let query = new AV.Query('postList');
     query.equalTo('postId', Number.parseInt(options.id));
     query.find().then((res) => {
+
+      // 当用户查看文章详情时，更新文章的阅读次数
+      let post = AV.Object.createWithoutData('postList', res[0].id);
+      post.set('reading', res[0].attributes.reading + 1);
+      post.save();
       /**
        * 初始化信息
        * @param {Number} currentPostId - 文章Id
