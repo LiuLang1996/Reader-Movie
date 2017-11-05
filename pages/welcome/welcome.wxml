@@ -3,6 +3,6 @@
   <image class="user-avatar" src="{{userInfo.avatarUrl}}"></image>
   <text class="user-name">Hello, {{userInfo.nickName}}</text>
   <view class="moto-container" catchtap='onTap'>
-    <text class="moto">开启小程序之旅</text>
+    <text class="moto">进入程序</text>
   </view>
 </view>

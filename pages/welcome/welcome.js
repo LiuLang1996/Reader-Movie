@@ -8,7 +8,7 @@ Page({
       success(res) {
         if (res.code) {
           wx.getUserInfo({
-            success: function(res) {
+            success: function (res) {
               that.setData({
                 userInfo: res.userInfo
               });

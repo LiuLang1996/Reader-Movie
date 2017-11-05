@@ -16,7 +16,8 @@ Page({
     let movie = new Movie(detailUrl);
     movie.getMovieData(movie => {
       this.setData({
-        movie: movie
+        movie: movie,
+        id: id
       });
     });
   },
@@ -26,5 +27,25 @@ Page({
    */
   processDoubanData(data) {
     console.log(data);
+  },
+
+  /**
+   * 页面分享
+   */
+  onShareAppMessage: function (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: this.data.movie.title,
+      path: `pages/movies/movie-detail/movie-detail?id=${this.data.id}`,
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
   }
 });

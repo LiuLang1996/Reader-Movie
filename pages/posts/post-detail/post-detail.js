@@ -12,7 +12,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
     let that = this;
     let query = new AV.Query('postList');
     query.equalTo('postId', Number.parseInt(options.id));
@@ -88,18 +87,6 @@ Page({
   },
 
   /**
-   * 页面分享
-   */
-  onShareTap(event) {
-    wx.showActionSheet({
-      itemList: ["分享给微信好友", "分享到朋友圈"],
-      success: function (res) {
-        console.log(res.tapIndex);
-      }
-    });
-  },
-
-  /**
    * 音乐播放控制
    */
   onMusicTap(event) {
@@ -136,5 +123,25 @@ Page({
    */
   onUnload() {
     wx.stopBackgroundAudio();
+  },
+
+  /**
+   * 分享
+   */
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: this.data.postData.title,
+      path: `pages/posts/post-detail/post-detail?id=${this.data.currentPostId}`,
+      success: function (res) {
+        // 转发成功
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
   }
 });

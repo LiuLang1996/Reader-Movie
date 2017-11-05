@@ -79,6 +79,12 @@
   height: 90rpx;
 }
 
+.circle-img button {
+  border: none;
+  display: inline;
+  padding: 0;
+}
+
 .share-img {
   margin-left: 30rpx;
 }
