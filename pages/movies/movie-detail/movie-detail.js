@@ -15,6 +15,9 @@ Page({
     let detailUrl = `${app.globalData.doubanBaseUrl}/v2/movie/subject/${id}`;
     let movie = new Movie(detailUrl);
     movie.getMovieData(movie => {
+      wx.setNavigationBarTitle({
+        title: movie.title
+      })
       this.setData({
         movie: movie,
         id: id
