@@ -19,5 +19,5 @@
 
 你可以扫描下面的二维码快速的体验 `图书电影` 小程序
 
-![图书电影](http://ow4hqwlyg.bkt.clouddn.com/gh_70879667d99e_860.jpg)
+![图书电影](http://ow4hqwlyg.bkt.clouddn.com/gh_70879667d99e_258.jpg)
 
